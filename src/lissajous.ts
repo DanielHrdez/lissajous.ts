@@ -20,16 +20,16 @@
  * lissajous.render(canvas);
  */
 export class Lissajous {
-  private width: number;
-  private height: number;
+  private width: number | undefined;
+  private height: number | undefined;
   private speed: number;
   private lineWidth: number;
   private color: string;
   private numerator: number;
   private denominator: number;
-  private angle: number;
-  private xPosition: number;
-  private yPosition: number;
+  public angle: number;
+  private xPosition: number | undefined;
+  private yPosition: number | undefined;
 
   /**
    * @constructor Lissajous
@@ -51,14 +51,10 @@ export class Lissajous {
     denominator?: number,
     angle?: number
   }) {
-    this.width = 0;
-    this.height = 0;
     this.speed = options?.speed || 0.01;
     this.numerator = options?.numerator || 1;
     this.denominator = options?.denominator || 1;
     this.angle = options?.angle || 0;
-    this.xPosition = 0;
-    this.yPosition = 0;
     this.lineWidth = options?.lineWidth || 1;
     this.color = options?.color || 'black';
   }
@@ -84,13 +80,50 @@ export class Lissajous {
         height: number,
       },
   ) {
-    this.width = options?.width || canvas.width / 2;
-    this.height = options?.height || canvas.height / 2;
+    if (this.width === undefined) {
+      this.width = options?.width || canvas.width / 2;
+    }
+    if (this.height === undefined) {
+      this.height = options?.height || canvas.height / 2;
+    }
+    if (this.xPosition === undefined) {
+      this.xPosition = options?.x || canvas.width / 2 - this.width! / 2;
+    }
+    if (this.yPosition === undefined) {
+      this.yPosition = options?.y || canvas.height / 2 - this.height! / 2;
+    }
     const context = canvas.getContext('2d')!;
-    this.xPosition = options?.x || canvas.width / 2 - this.width / 2;
-    this.yPosition = options?.y || canvas.height / 2 - this.height / 2;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    this.drawGrid(context, canvas.width, canvas.height);
     const points = this.calculate();
     this.drawShape(context, points);
+  }
+
+  /**
+   * Draws the grid
+   * @param {CanvasRenderingContext2D} context - context
+   * @param {number} width - width
+   * @param {number} height - height
+   */
+  private drawGrid(
+      context: CanvasRenderingContext2D,
+      width: number,
+      height: number,
+  ) {
+    context.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+    context.lineWidth = 1;
+    for (let i = 0; i < width; i += 10) {
+      context.beginPath();
+      context.moveTo(i, 0);
+      context.lineTo(i, height);
+      context.stroke();
+    }
+    for (let i = 0; i < height; i += 10) {
+      context.beginPath();
+      context.moveTo(0, i);
+      context.lineTo(width, i);
+      context.stroke();
+    }
   }
 
   /**
@@ -100,7 +133,7 @@ export class Lissajous {
   private calculate(): [number, number][] {
     const result = [];
     const twoPI = 2 * Math.PI;
-    const increment = twoPI / this.width;
+    const increment = twoPI / this.width!;
     for (let i = 0; i < twoPI; i += increment) {
       result.push(this.calculatePoint(i));
     }
@@ -129,9 +162,9 @@ export class Lissajous {
   ) {
     const range: [number, number] = [-1, 1];
     const rangeX: [number, number] =
-        [this.xPosition, this.xPosition + this.width];
+        [this.xPosition!, this.xPosition! + this.width!];
     const rangeY: [number, number] =
-        [this.yPosition, this.yPosition + this.height];
+        [this.yPosition!, this.yPosition! + this.height!];
     const firstPointX = this.convertRange(points[0][0], range, rangeX);
     const firstPointY = this.convertRange(points[0][1], range, rangeY);
     context.beginPath();
@@ -144,6 +177,7 @@ export class Lissajous {
       const yConverted = this.convertRange(positionY, range, rangeY);
       context.lineTo(xConverted, yConverted);
     });
+    context.lineTo(firstPointX, firstPointY);
     context.stroke();
   }
 
@@ -162,5 +196,48 @@ export class Lissajous {
     const numerator = (value - range1[0]) * (range2[1] - range2[0]);
     const denominator = range1[1] - range1[0];
     return numerator / denominator + range2[0];
+  }
+
+  /**
+   * Update the angle by the speed
+   */
+  public update() {
+    this.angle += this.speed;
+  }
+
+  /**
+   * Set the given param
+   * @param {string} name - name
+   * @param {number | string} value - value
+   */
+  public setParam(name: string, value: number | string) {
+    switch (name.toLowerCase()) {
+      case 'speed':
+        this.speed = Number(value); break;
+      case 'a':
+      case 'numerator':
+        this.numerator = Number(value); break;
+      case 'b':
+      case 'denominator':
+        this.denominator = Number(value); break;
+      case 'angle':
+        this.angle = Number(value); break;
+      case 'line-width':
+      case 'lineWidth':
+        this.lineWidth = Number(value); break;
+      case 'color':
+        this.color = String(value); break;
+      case 'x':
+      case 'x-position':
+        this.xPosition = Number(value); break;
+      case 'y':
+      case 'y-position':
+        this.yPosition = Number(value); break;
+      case 'width':
+        this.width = Number(value); break;
+      case 'height':
+        this.height = Number(value); break;
+      default: break;
+    }
   }
 }
