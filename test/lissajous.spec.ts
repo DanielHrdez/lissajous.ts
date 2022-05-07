@@ -11,4 +11,15 @@
 
 import {Lissajous} from '../src/lissajous';
 
-describe('Lissajous class', () => {});
+describe('Lissajous class', () => {
+  it('constructor', () => {
+    const lissajous = new Lissajous();
+    expect(lissajous).toBeInstanceOf(Lissajous);
+  });
+
+  it('render', () => {
+    const lissajous = new Lissajous();
+    const canvas = document.createElement('canvas');
+    lissajous.render(canvas);
+  });
+});

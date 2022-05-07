@@ -23,17 +23,17 @@ export class Lissajous {
   private width: number;
   private height: number;
   private speed: number;
-  private color: string;
   private lineWidth: number;
+  private color: string;
   private numerator: number;
   private denominator: number;
   private angle: number;
+  private xPosition: number;
+  private yPosition: number;
 
   /**
    * @constructor Lissajous
    * @param {object} [options] - Options
-   * @param {number} [options.width] - Width
-   * @param {number} [options.height] - Height
    * @param {number} [options.speed] - Speed
    * @param {string} [options.color] - Color
    * @param {number} [options.lineWidth] - Line width
@@ -44,43 +44,123 @@ export class Lissajous {
    * const lissajous = new Lissajous();
    */
   constructor(options?: {
-    width?: number,
-    height?: number,
     speed?: number,
-    color?: string,
     lineWidth?: number,
+    color?: string,
     numerator?: number,
     denominator?: number,
     angle?: number
   }) {
-    this.width = options?.width || 500;
-    this.height = options?.height || 500;
+    this.width = 0;
+    this.height = 0;
     this.speed = options?.speed || 0.01;
-    this.color = options?.color || 'black';
-    this.lineWidth = options?.lineWidth || 1;
     this.numerator = options?.numerator || 1;
     this.denominator = options?.denominator || 1;
     this.angle = options?.angle || 0;
+    this.xPosition = 0;
+    this.yPosition = 0;
+    this.lineWidth = options?.lineWidth || 1;
+    this.color = options?.color || 'black';
   }
 
   /**
    * @method render
    * @param {HTMLCanvasElement} canvas - Canvas
-   * @param {object} [position] - Position
-   * @param {number} [position.x] - X
-   * @param {number} [position.y] - Y
+   * @param {object} [options] - Position
+   * @param {number} [options.x] - X
+   * @param {number} [options.y] - Y
+   * @param {number} [options.width] - Width
+   * @param {number} [options.height] - Height
    * @example
    * const lissajous = new Lissajous();
    * lissajous.render(canvas);
    */
   public render(
       canvas: HTMLCanvasElement,
-      position?: { x: number, y: number },
+      options?: {
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+      },
   ) {
+    this.width = options?.width || canvas.width / 2;
+    this.height = options?.height || canvas.height / 2;
     const context = canvas.getContext('2d')!;
-    const xPosition = position?.x || canvas.width / 2 - this.width / 2;
-    const yPosition = position?.y || canvas.height / 2 - this.height / 2;
-    context.fillStyle = this.color;
-    context.fillRect(xPosition, yPosition, this.width, this.height);
+    this.xPosition = options?.x || canvas.width / 2 - this.width / 2;
+    this.yPosition = options?.y || canvas.height / 2 - this.height / 2;
+    const points = this.calculate();
+    this.drawShape(context, points);
+  }
+
+  /**
+   * Calculates the pixels
+   * @return {[number, number][]} - Pixels
+   */
+  private calculate(): [number, number][] {
+    const result = [];
+    const twoPI = 2 * Math.PI;
+    const increment = twoPI / this.width;
+    for (let i = 0; i < twoPI; i += increment) {
+      result.push(this.calculatePoint(i));
+    }
+    return result;
+  }
+  /**
+   * Calculates a (x, y) point
+   * @param {number} angle - Angle
+   * @return {[number, number]} - Point
+   */
+  private calculatePoint(angle: number): [number, number] {
+    return [
+      Math.sin(this.numerator * angle + this.angle),
+      Math.sin(this.denominator * angle),
+    ];
+  }
+
+  /**
+   * Calculates the pixels
+   * @param {CanvasRenderingContext2D} context - context
+   * @param {[number, number][]} points - points
+   */
+  private drawShape(
+      context: CanvasRenderingContext2D,
+      points: [number, number][],
+  ) {
+    const range: [number, number] = [-1, 1];
+    const rangeX: [number, number] =
+        [this.xPosition, this.xPosition + this.width];
+    const rangeY: [number, number] =
+        [this.yPosition, this.yPosition + this.height];
+    const firstPointX = this.convertRange(points[0][0], range, rangeX);
+    const firstPointY = this.convertRange(points[0][1], range, rangeY);
+    context.beginPath();
+    context.lineWidth = this.lineWidth;
+    context.strokeStyle = this.color;
+    context.moveTo(firstPointX, firstPointY);
+    points.forEach(([positionX, positionY], index) => {
+      if (index === 0) return;
+      const xConverted = this.convertRange(positionX, range, rangeX);
+      const yConverted = this.convertRange(positionY, range, rangeY);
+      context.lineTo(xConverted, yConverted);
+    });
+    context.stroke();
+  }
+
+  /**
+   * Convert a number from range1 to range2
+   * @param {number} value - value
+   * @param {[number, number]} range1 - range1
+   * @param {[number, number]} range2 - range2
+   * @return {number} - new value
+   */
+  private convertRange(
+      value: number,
+      range1: [number, number],
+      range2: [number, number],
+  ): number {
+    const numerator = (value - range1[0]) * (range2[1] - range2[0]);
+    const denominator = range1[1] - range1[0];
+    return numerator / denominator + range2[0];
   }
 }
