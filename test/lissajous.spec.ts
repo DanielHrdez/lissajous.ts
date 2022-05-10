@@ -10,16 +10,37 @@
  */
 
 import {Lissajous} from '../src/lissajous';
+import 'jest-canvas-mock';
 
 describe('Lissajous class', () => {
+  let lissajous = new Lissajous();
+  let canvas = document.createElement('canvas');
+
+  beforeEach(() => {
+    canvas = document.createElement('canvas');
+    lissajous = new Lissajous();
+  });
+
   it('constructor', () => {
-    const lissajous = new Lissajous();
     expect(lissajous).toBeInstanceOf(Lissajous);
   });
 
   it('render', () => {
-    const lissajous = new Lissajous();
-    const canvas = document.createElement('canvas');
     lissajous.render(canvas);
+  });
+
+  it('angle', () => {
+    lissajous.angle = 1;
+    expect(lissajous.angle).toBe(1);
+  });
+
+  it('update', () => {
+    lissajous.update();
+    expect(lissajous.angle).toBe(0.01);
+  });
+
+  it('setParam', () => {
+    lissajous.setParam('angle', 1);
+    expect(lissajous.angle).toBe(1);
   });
 });

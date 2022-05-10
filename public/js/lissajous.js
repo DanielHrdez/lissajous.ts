@@ -1,5 +1,6 @@
 export class Lissajous {
     constructor(options) {
+        this.defaultSize = 1e2;
         this.speed = (options === null || options === void 0 ? void 0 : options.speed) || 0.01;
         this.numerator = (options === null || options === void 0 ? void 0 : options.numerator) || 1;
         this.denominator = (options === null || options === void 0 ? void 0 : options.denominator) || 1;
@@ -21,31 +22,34 @@ export class Lissajous {
             this.yPosition = (options === null || options === void 0 ? void 0 : options.y) || canvas.height / 2 - this.height / 2;
         }
         const context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        this.drawGrid(context, canvas.width, canvas.height);
-        const points = this.calculate();
-        this.drawShape(context, points);
+        if (context) {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            this.drawGrid(context, canvas.width, canvas.height);
+            const points = this.calculate();
+            this.drawShape(context, points);
+        }
     }
     drawGrid(context, width, height) {
         context.strokeStyle = 'rgba(0, 0, 0, 0.1)';
         context.lineWidth = 1;
-        for (let i = 0; i < width; i += 10) {
-            context.beginPath();
+        const numberOfLines = 100;
+        const pixelSizeHorizontal = width / numberOfLines;
+        const pixelSizeVertical = height / numberOfLines;
+        context.beginPath();
+        for (let i = 0; i < width; i += pixelSizeHorizontal) {
             context.moveTo(i, 0);
             context.lineTo(i, height);
-            context.stroke();
         }
-        for (let i = 0; i < height; i += 10) {
-            context.beginPath();
+        for (let i = 0; i < height; i += pixelSizeVertical) {
             context.moveTo(0, i);
             context.lineTo(width, i);
-            context.stroke();
         }
+        context.stroke();
     }
     calculate() {
         const result = [];
         const twoPI = 2 * Math.PI;
-        const increment = twoPI / this.width;
+        const increment = twoPI / (this.width || this.defaultSize);
         for (let i = 0; i < twoPI; i += increment) {
             result.push(this.calculatePoint(i));
         }
@@ -59,8 +63,14 @@ export class Lissajous {
     }
     drawShape(context, points) {
         const range = [-1, 1];
-        const rangeX = [this.xPosition, this.xPosition + this.width];
-        const rangeY = [this.yPosition, this.yPosition + this.height];
+        const rangeX = [
+            this.xPosition || 0,
+            (this.xPosition + this.width) || this.defaultSize,
+        ];
+        const rangeY = [
+            this.yPosition || 0,
+            (this.yPosition + this.height) || this.defaultSize,
+        ];
         const firstPointX = this.convertRange(points[0][0], range, rangeX);
         const firstPointY = this.convertRange(points[0][1], range, rangeY);
         context.beginPath();

@@ -30,6 +30,7 @@ export class Lissajous {
   public angle: number;
   private xPosition: number | undefined;
   private yPosition: number | undefined;
+  private defaultSize = 1e2;
 
   /**
    * @constructor Lissajous
@@ -93,10 +94,12 @@ export class Lissajous {
       this.yPosition = options?.y || canvas.height / 2 - this.height! / 2;
     }
     const context = canvas.getContext('2d')!;
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    this.drawGrid(context, canvas.width, canvas.height);
-    const points = this.calculate();
-    this.drawShape(context, points);
+    if (context) {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      this.drawGrid(context, canvas.width, canvas.height);
+      const points = this.calculate();
+      this.drawShape(context, points);
+    }
   }
 
   /**
@@ -112,18 +115,19 @@ export class Lissajous {
   ) {
     context.strokeStyle = 'rgba(0, 0, 0, 0.1)';
     context.lineWidth = 1;
-    for (let i = 0; i < width; i += 10) {
-      context.beginPath();
+    const numberOfLines = 100;
+    const pixelSizeHorizontal = width / numberOfLines;
+    const pixelSizeVertical = height / numberOfLines;
+    context.beginPath();
+    for (let i = 0; i < width; i += pixelSizeHorizontal) {
       context.moveTo(i, 0);
       context.lineTo(i, height);
-      context.stroke();
     }
-    for (let i = 0; i < height; i += 10) {
-      context.beginPath();
+    for (let i = 0; i < height; i += pixelSizeVertical) {
       context.moveTo(0, i);
       context.lineTo(width, i);
-      context.stroke();
     }
+    context.stroke();
   }
 
   /**
@@ -133,7 +137,7 @@ export class Lissajous {
   private calculate(): [number, number][] {
     const result = [];
     const twoPI = 2 * Math.PI;
-    const increment = twoPI / this.width!;
+    const increment = twoPI / (this.width! || this.defaultSize);
     for (let i = 0; i < twoPI; i += increment) {
       result.push(this.calculatePoint(i));
     }
@@ -161,10 +165,14 @@ export class Lissajous {
       points: [number, number][],
   ) {
     const range: [number, number] = [-1, 1];
-    const rangeX: [number, number] =
-        [this.xPosition!, this.xPosition! + this.width!];
-    const rangeY: [number, number] =
-        [this.yPosition!, this.yPosition! + this.height!];
+    const rangeX: [number, number] = [
+        this.xPosition! || 0,
+        (this.xPosition! + this.width!) || this.defaultSize,
+    ];
+    const rangeY: [number, number] = [
+        this.yPosition! || 0,
+        (this.yPosition! + this.height!) || this.defaultSize,
+    ];
     const firstPointX = this.convertRange(points[0][0], range, rangeX);
     const firstPointY = this.convertRange(points[0][1], range, rangeY);
     context.beginPath();

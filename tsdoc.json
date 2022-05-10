@@ -1,0 +1,37 @@
+{
+	"tags":
+	{
+		"allowUnknownTags" : true
+	},
+	"plugins":[
+		 "plugins/markdown"
+		,"/home/usuario/practicas/2021-2022-pai-p11-lissajous-alu0101331720/node_modules/tsdoc/template/plugins/TSDoc.js"
+	],
+	"opts":
+	{
+		"template"	:"/home/usuario/practicas/2021-2022-pai-p11-lissajous-alu0101331720/node_modules/tsdoc/template",
+		"recurse"	:"true"
+	},
+	"templates" : {
+		"cleverLinks"     : false,
+		"monospaceLinks"  : false
+	},
+	"source":
+	{
+		"includePattern": "(\\.d)?\\.ts$"
+	},
+	"markdown"  : {
+		"parser"   : "gfm",
+		"hardwrap" : true
+	},
+	"tsdoc":{
+		"source"		:"/home/usuario/practicas/2021-2022-pai-p11-lissajous-alu0101331720/src/",
+		"destination"	:"/home/usuario/practicas/2021-2022-pai-p11-lissajous-alu0101331720/public/docs",
+		"tutorials"		:"",
+		"systemName"	: "2021-2022-pai-p11-lissajous-alu0101331720",
+		"footer"		: "",
+		"copyright"		: "2021-2022-pai-p11-lissajous-alu0101331720 Copyright © 2022 usuario.",
+		"outputSourceFiles" : true,
+		"commentsOnly": true
+	}
+}

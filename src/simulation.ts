@@ -12,6 +12,14 @@
 import {Lissajous} from './lissajous.js';
 
 /**
+ * Throw not found error
+ * @param {string} string - String
+ */
+function notFoundError(string: string) {
+  throw new Error(`${string} not found`);
+}
+
+/**
  * Sets the canvas css style
  * @param {HTMLCanvasElement} canvas - Canvas
  */
@@ -33,11 +41,14 @@ function setParamsStyle(params: HTMLDivElement): void {
   params.style.position = 'absolute';
   params.style.transform = 'translate(-50%, -50%)';
   params.style.top = '50%';
-  params.style.right = '15%';
+  params.style.right = '10%';
   params.style.display = 'grid';
   params.style.gap = '10px';
   params.style.boxShadow = '0px 0px 10px rgba(0, 0, 0, 0.5)';
   params.style.padding = '10px';
+  params.style.zIndex = '1';
+  // @ts-ignore
+  params.style.backdropFilter = 'blur(10px)';
 }
 
 /**
@@ -50,20 +61,18 @@ function setValueChanges(params: HTMLDivElement): void {
     input.addEventListener('change', () => {
       const value = input.value;
       const name = input.id;
+      const nameLabel = name + '_label';
       lissajous.setParam(name, value);
-      const label = document.getElementById(name + '_label')!;
-      label.textContent = name[0].toUpperCase() + name.slice(1) + ': ' + value;
+      const label = document.getElementById(nameLabel)!;
+      if (label) {
+        const upperName = name[0].toUpperCase() + name.slice(1);
+        label.textContent = `${upperName}: ${value}`;
+      } else {
+        notFoundError(nameLabel);
+      }
     });
   }
 }
-
-const canvas = document.createElement('canvas');
-const params = document.getElementById('params')! as HTMLDivElement;
-setSimulationStyle(canvas);
-setParamsStyle(params);
-setValueChanges(params);
-const lissajous = new Lissajous();
-document.body.appendChild(canvas);
 
 /**
  * Main Loop
@@ -71,10 +80,28 @@ document.body.appendChild(canvas);
 function loop(): void {
   lissajous.render(canvas);
   lissajous.update();
-  const angle = document.getElementById('angle_label')! as HTMLLabelElement;
-  const degrees = (lissajous.angle * 180 / Math.PI).toFixed(0);
-  angle.textContent = `Angle: ${degrees}°`;
-  if (lissajous.angle > Math.PI * 2) lissajous.angle = 0;
-  requestAnimationFrame(loop);
+  const angleLabel = 'angle_label';
+  const angle = document.getElementById(angleLabel)! as HTMLLabelElement;
+  if (angle) {
+    const degrees = (lissajous.angle * 180 / Math.PI).toFixed(0);
+    angle.textContent = `Angle: ${degrees}°`;
+    if (lissajous.angle > Math.PI * 2) lissajous.angle = 0;
+    requestAnimationFrame(loop);
+  } else {
+    notFoundError(angleLabel);
+  }
 }
-loop();
+
+const lissajous = new Lissajous();
+const canvas = document.createElement('canvas');
+const paramsName = 'params';
+const params = document.getElementById(paramsName)! as HTMLDivElement;
+if (params) {
+  setSimulationStyle(canvas);
+  setParamsStyle(params);
+  setValueChanges(params);
+  document.body.appendChild(canvas);
+  loop();
+} else {
+  notFoundError(paramsName);
+}

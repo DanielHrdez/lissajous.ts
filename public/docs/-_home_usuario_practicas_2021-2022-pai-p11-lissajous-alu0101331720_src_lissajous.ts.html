@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+	<title>2021-2022-pai-p11-lissajous-alu0101331720 Source: /home/usuario/practicas/2021-2022-pai-p11-lissajous-alu0101331720/src/lissajous.ts</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+	
+	<style>
+		.sideMenu
+		{
+			margin-left: 320px!important;
+
+		}
+		#main
+		{
+			margin-top: 46px;
+		}
+		#mainMenu
+		{
+			position: fixed;
+			left: 0px;
+			top: 0px;
+			
+		}
+
+		#searchBox
+		{
+			vertical-align: none !important;
+			padding-right: 0px;
+			width:238px;
+
+		}
+		.sideMargin
+		{
+			margin-left: 15px;
+		}
+		.sunlight-code-container
+		{
+			border:none!important;
+		}
+		.navTitle
+		{
+			font-size:15px;
+			padding:0px;
+
+		}
+		.nav-list
+		{
+			width: 100%;
+		}
+		.nav-list
+		{
+			padding-left:20px;
+		}		
+		.nav-list li
+		{
+			line-height: 16px;
+		}
+		.handCursor
+		{
+			cursor: pointer;
+		}
+		.nav-pills > li > a {
+			padding-top: 0px;
+			padding-bottom: 0px;
+		}
+
+		#projectTitle
+		{
+			position: fixed;
+			padding-left: 10px;
+			padding-top: 5px;
+			font-size: 26px;
+			font-weight: lighter;
+			letter-spacing: -1px;
+			background-color: #FFF;
+			width: 100%;
+			height: 35px;
+			line-height: 18px;
+			color: #000;
+			border-bottom: 1px solid rgba(0,0,0,.2);
+			z-index: 10;
+		}
+		h1, h2, h3, h4, h5, h6 {
+			font-family: 'Helvetica Neue';
+			font-weight: lighter;
+		}
+		h3
+		{
+			font-size: 22px;
+			font-weight: lighter;
+		}
+		.page-title
+		{
+			font-weight: lighter;
+			font-size: 28px;
+			letter-spacing: -2px;
+			padding-top:0px;
+		}
+
+		.well
+		{
+			padding: 5px;
+			width:280px;
+			margin-left:0px;
+		}
+
+
+		.menuFrame
+		{
+			margin-top: 20px;
+			overflow:hidden; 
+			overflow-y:auto;
+		}
+		.menuFrame::-webkit-scrollbar {
+		    -webkit-appearance: none;
+		}
+
+		.menuFrame::-webkit-scrollbar:vertical {
+		    width: 11px;
+		}
+
+		.menuFrame::-webkit-scrollbar:horizontal {
+		    height: 11px;
+		}
+
+		.menuFrame::-webkit-scrollbar-thumb {
+		    border-radius: 8px;
+		    border: 2px solid white; /* should match background, can't be transparent */
+		    background-color: rgba(0, 0, 0, .5);
+		}
+		
+		.container-fluid
+		{
+			padding-left: 10px;
+		}
+
+		#side-menu
+		{
+			height: 415px;
+			box-shadow: inset 0 0 10px rgba(0,0,0,.5);
+			border: 1px solid #999;
+		}
+
+		#menuAside
+		{
+			margin-top:50px;
+			position:fixed;
+		}
+
+		.member {
+			font-size: 14px;
+			color:#000;
+			background-color:#FFF;
+			border:1px solid #2fa4e7;
+		}
+		.member:hover {
+
+			background-color:#F6F6F6;
+		}		
+		.member-open .paramSignature{
+			font-size: 14px;
+			color: #2fa4e7;
+		}
+		.member-collapsed .paramSignature{
+			font-size: 14px;
+			color: #2fa4e7;
+		}
+		.routeTitle{
+		    cursor: pointer;
+		}
+
+		.genericAnnotation
+		{
+		    color:#2fa4e7;
+		}
+
+		.sourceBar
+		{
+			margin-top: -5px;
+		}
+
+
+
+.twitter-typeahead
+{
+	top: -5px;
+}
+.twitter-typeahead .tt-query,
+.twitter-typeahead .tt-hint {
+  margin-bottom: 0;
+  background-color: #F00;
+  border-radius: 20px;
+
+}
+
+.tt-hint
+{
+	top: 2px!important;
+
+    padding-left: 10px!important;  
+    width: 188px;
+    text-indent: 4px;
+}
+.tt-dropdown-menu {
+  min-width: 160px;
+  margin-top: 2px;
+  padding: 5px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,.2);
+  *border-right-width: 2px;
+  *border-bottom-width: 2px;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  -webkit-background-clip: padding-box;
+     -moz-background-clip: padding;
+          background-clip: padding-box;
+}
+
+.tt-suggestion {
+  display: block;
+  padding: 3px 20px;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+  color: #fff;
+  background-color: #0081c2;
+  background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
+  background-image: -webkit-linear-gradient(top, #0088cc, #0077b3);
+  background-image: -o-linear-gradient(top, #0088cc, #0077b3);
+  background-image: linear-gradient(to bottom, #0088cc, #0077b3);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0)
+}
+
+.tt-suggestion.tt-is-under-cursor a {
+  color: #fff;
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+	</style>
+</head>
+
+<body>
+<div id="projectTitle">
+	<div id="btnCollapse" class="btn collapseSidebarButton btn-primary"><i class="icon-th-list icon-white"></i></div>
+	2021-2022-pai-p11-lissajous-alu0101331720
+</div>	
+<div class="container-fluid">
+
+	<div id="menuAside">
+    <aside class="well span3 oc" id="side-menu" role="navigation">
+
+    	<div style="margin-left: 10px; margin-top: 10px;">
+			<input type="text" id="searchBox" class="search-query typeahead" placeholder="Search">
+		</div>
+		<div class="menuFrame" id="sideMenuFrame">
+		<ul id="menuContainer" class="nav nav-pills nav-stacked">
+			<li class="nav-header navTitle"><a href="index.html">INDEX</a></li>
+				<li class="divider"></li>
+				
+				
+					    <li id="navTitle_Modules" class="nav-header navTitle">
+                            <a class="handCursor" data-toggle="collapse" data-id="T_Modules" data-target="#collapse_Modules">Modules<span class="badge badge-info pull-right">1</span></a>
+                        </li>
+                        <li id="navContents_Modules">
+                            <div id="collapse_Modules" class="collapse">
+                                <ul class="nav nav-list" style="width:100%;margin-left:-8px;">
+                                    
+                                        <?j
+                                    <li>
+                                        
+                                        
+                                        	<a href="module-Lissajous.html">Lissajous</a>
+                                        
+                                    </li>
+                                    
+                             <li class="divider"></li>
+                        
+                                    </ul>
+                                </div>
+                            </li>
+                        
+					    <li id="navTitle_Classes" class="nav-header navTitle">
+                            <a class="handCursor" data-toggle="collapse" data-id="T_Classes" data-target="#collapse_Classes">Classes<span class="badge badge-info pull-right">1</span></a>
+                        </li>
+                        <li id="navContents_Classes">
+                            <div id="collapse_Classes" class="collapse">
+                                <ul class="nav nav-list" style="width:100%;margin-left:-8px;">
+                                    <li><a href="module:Lissajous~Lissajous.html">module:Lissajous~Lissajous</a></li>
+                            
+                                    </ul>
+                                </div>
+                            </li>
+                        
+
+		</ul>
+		</div>
+
+		<script>
+			var searchMembers = [{"realName":"module:Lissajous~Lissajous","link":"module:Lissajous~Lissajous"}];
+		</script>
+    </aside>
+	</div>
+    <div id="docContents" class="sideMenu sideMargin">
+
+		
+			<div style="width:100%">
+		
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: /home/usuario/practicas/2021-2022-pai-p11-lissajous-alu0101331720/src/lissajous.ts</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript ">/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Programación de Aplicaciones Interactivas
+ *
+ * @author Daniel Hernandez de Leon
+ * @since May 06 2022
+ * @desc Lissajous class
+ */
+
+/**
+ * @module Lissajous
+ * @description Lissajous class
+ * @version 1.0.0
+ * @author Daniel Hernandez de Leon
+ * @since May 06 2022
+ * @example
+ * const lissajous = new Lissajous();
+ * lissajous.render(canvas);
+ */
+export class Lissajous {
+  private width: number | undefined;
+  private height: number | undefined;
+  private speed: number;
+  private lineWidth: number;
+  private color: string;
+  private numerator: number;
+  private denominator: number;
+  public angle: number;
+  private xPosition: number | undefined;
+  private yPosition: number | undefined;
+  private defaultSize = 1e2;
+
+  /**
+   * @constructor Lissajous
+   * @param {object} [options] - Options
+   * @param {number} [options.speed] - Speed
+   * @param {string} [options.color] - Color
+   * @param {number} [options.lineWidth] - Line width
+   * @param {number} [options.numerator] - Numerator
+   * @param {number} [options.denominator] - Denominator
+   * @param {number} [options.angle] - Angle
+   * @example
+   * const lissajous = new Lissajous();
+   */
+  constructor(options?: {
+    speed?: number,
+    lineWidth?: number,
+    color?: string,
+    numerator?: number,
+    denominator?: number,
+    angle?: number
+  }) {
+    this.speed = options?.speed || 0.01;
+    this.numerator = options?.numerator || 1;
+    this.denominator = options?.denominator || 1;
+    this.angle = options?.angle || 0;
+    this.lineWidth = options?.lineWidth || 1;
+    this.color = options?.color || 'black';
+  }
+
+  /**
+   * @method render
+   * @param {HTMLCanvasElement} canvas - Canvas
+   * @param {object} [options] - Position
+   * @param {number} [options.x] - X
+   * @param {number} [options.y] - Y
+   * @param {number} [options.width] - Width
+   * @param {number} [options.height] - Height
+   * @example
+   * const lissajous = new Lissajous();
+   * lissajous.render(canvas);
+   */
+  public render(
+      canvas: HTMLCanvasElement,
+      options?: {
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+      },
+  ) {
+    if (this.width === undefined) {
+      this.width = options?.width || canvas.width / 2;
+    }
+    if (this.height === undefined) {
+      this.height = options?.height || canvas.height / 2;
+    }
+    if (this.xPosition === undefined) {
+      this.xPosition = options?.x || canvas.width / 2 - this.width! / 2;
+    }
+    if (this.yPosition === undefined) {
+      this.yPosition = options?.y || canvas.height / 2 - this.height! / 2;
+    }
+    const context = canvas.getContext('2d')!;
+    if (context) {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      this.drawGrid(context, canvas.width, canvas.height);
+      const points = this.calculate();
+      this.drawShape(context, points);
+    }
+  }
+
+  /**
+   * Draws the grid
+   * @param {CanvasRenderingContext2D} context - context
+   * @param {number} width - width
+   * @param {number} height - height
+   */
+  private drawGrid(
+      context: CanvasRenderingContext2D,
+      width: number,
+      height: number,
+  ) {
+    context.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+    context.lineWidth = 1;
+    const numberOfLines = 100;
+    const pixelSizeHorizontal = width / numberOfLines;
+    const pixelSizeVertical = height / numberOfLines;
+    context.beginPath();
+    for (let i = 0; i &lt; width; i += pixelSizeHorizontal) {
+      context.moveTo(i, 0);
+      context.lineTo(i, height);
+    }
+    for (let i = 0; i &lt; height; i += pixelSizeVertical) {
+      context.moveTo(0, i);
+      context.lineTo(width, i);
+    }
+    context.stroke();
+  }
+
+  /**
+   * Calculates the pixels
+   * @return {[number, number][]} - Pixels
+   */
+  private calculate(): [number, number][] {
+    const result = [];
+    const twoPI = 2 * Math.PI;
+    const increment = twoPI / (this.width! || this.defaultSize);
+    for (let i = 0; i &lt; twoPI; i += increment) {
+      result.push(this.calculatePoint(i));
+    }
+    return result;
+  }
+  /**
+   * Calculates a (x, y) point
+   * @param {number} angle - Angle
+   * @return {[number, number]} - Point
+   */
+  private calculatePoint(angle: number): [number, number] {
+    return [
+      Math.sin(this.numerator * angle + this.angle),
+      Math.sin(this.denominator * angle),
+    ];
+  }
+
+  /**
+   * Calculates the pixels
+   * @param {CanvasRenderingContext2D} context - context
+   * @param {[number, number][]} points - points
+   */
+  private drawShape(
+      context: CanvasRenderingContext2D,
+      points: [number, number][],
+  ) {
+    const range: [number, number] = [-1, 1];
+    const rangeX: [number, number] = [
+        this.xPosition! || 0,
+        (this.xPosition! + this.width!) || this.defaultSize,
+    ];
+    const rangeY: [number, number] = [
+        this.yPosition! || 0,
+        (this.yPosition! + this.height!) || this.defaultSize,
+    ];
+    const firstPointX = this.convertRange(points[0][0], range, rangeX);
+    const firstPointY = this.convertRange(points[0][1], range, rangeY);
+    context.beginPath();
+    context.lineWidth = this.lineWidth;
+    context.strokeStyle = this.color;
+    context.moveTo(firstPointX, firstPointY);
+    points.forEach(([positionX, positionY], index) => {
+      if (index === 0) return;
+      const xConverted = this.convertRange(positionX, range, rangeX);
+      const yConverted = this.convertRange(positionY, range, rangeY);
+      context.lineTo(xConverted, yConverted);
+    });
+    context.lineTo(firstPointX, firstPointY);
+    context.stroke();
+  }
+
+  /**
+   * Convert a number from range1 to range2
+   * @param {number} value - value
+   * @param {[number, number]} range1 - range1
+   * @param {[number, number]} range2 - range2
+   * @return {number} - new value
+   */
+  private convertRange(
+      value: number,
+      range1: [number, number],
+      range2: [number, number],
+  ): number {
+    const numerator = (value - range1[0]) * (range2[1] - range2[0]);
+    const denominator = range1[1] - range1[0];
+    return numerator / denominator + range2[0];
+  }
+
+  /**
+   * Update the angle by the speed
+   */
+  public update() {
+    this.angle += this.speed;
+  }
+
+  /**
+   * Set the given param
+   * @param {string} name - name
+   * @param {number | string} value - value
+   */
+  public setParam(name: string, value: number | string) {
+    switch (name.toLowerCase()) {
+      case 'speed':
+        this.speed = Number(value); break;
+      case 'a':
+      case 'numerator':
+        this.numerator = Number(value); break;
+      case 'b':
+      case 'denominator':
+        this.denominator = Number(value); break;
+      case 'angle':
+        this.angle = Number(value); break;
+      case 'line-width':
+      case 'lineWidth':
+        this.lineWidth = Number(value); break;
+      case 'color':
+        this.color = String(value); break;
+      case 'x':
+      case 'x-position':
+        this.xPosition = Number(value); break;
+      case 'y':
+      case 'y-position':
+        this.yPosition = Number(value); break;
+      case 'width':
+        this.width = Number(value); break;
+      case 'height':
+        this.height = Number(value); break;
+      default: break;
+    }
+  }
+}
+</pre>
+        </article>
+    </section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+						<span class="copyright">
+						2021-2022-pai-p11-lissajous-alu0101331720 Copyright © 2022 usuario.
+						</span>
+									<br />
+									
+						<span class="jsdoc-message">
+						Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a>
+						on Tue May 10 2022 19:22:58 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/xperiments/TSDoc">TSDoc template</a>.
+						</span>
+				</footer>
+			</div>
+			<!--
+			
+			-->
+			<br clear="both">
+		</div>
+
+	</div>
+
+	<script src="scripts/sunlight.js"></script>
+	<script src="scripts/sunlight.javascript.js"></script>
+	<script src="scripts/sunlight-plugin.doclinks.js"></script>
+	<script src="scripts/sunlight-plugin.linenumbers.js"></script>
+	<script src="scripts/sunlight-plugin.menu.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/jquery.scrollTo.js"></script>
+	<script src="scripts/jquery.localScroll.js"></script>
+	<script src="scripts/bootstrap.min.js"></script>
+
+
+
+	<script>  Sunlight.highlightAll({lineNumbers:false,  showMenu: true, enableDoclinks :true}); </script>
+
+	<script>
+		$( function () {
+
+			var searchItems = [];
+			var searchMap = {};
+			var mapName = "";
+			for( var i=0; i<searchMembers.length; i++ )
+			{
+				realName = searchMembers[i].realName;
+				searchItems.push( realName );
+				searchMap[ realName ] = searchMembers[ i ];
+			}
+
+
+			$('.typeahead').typeahead({
+			  source: searchItems,
+			  matcher: function(item) {
+			  	//console.log('aaa'+item, this.query, item.indexOf( this.query.toLowerCase() )==-1?false:true)
+                // evaluate item variable and return true if the item was matched.
+                return item.toLowerCase().indexOf( this.query.toLowerCase() )==-1?false:true;
+             },
+			  updater: function (item) {
+					window.location.href = searchMap[ item ].link+'.html';
+			  }
+
+			});
+
+
+            // Move Tutorials to bottom
+            //$('#menuContainer').append($('#navTitle_Tutorials'));
+            //$('#menuContainer').append($('#navContents_Tutorials'));
+			$(window).resize(function() {
+			  $('#side-menu').height( $(window).height()-70 );
+			  $('#sideMenuFrame').height( $(window).height()-140 );
+			  if( $(window).width() <480 )
+			  {
+			  	$('#side-menu').hide();
+				$('#docContents').removeClass('sideMenu');
+			  }
+			});
+
+			$(window).trigger('resize')
+			$('#btnCollapse').click(function()
+			{
+				$('#side-menu').toggle();
+				$('#docContents').toggleClass('sideMenu');
+
+			})
+			$('#btnHome').click(function()
+			{
+				document.location.href="index.html"
+
+			})		
+
+			$('.sourceBar').click(function(){})
+			var lastMenuSelection = window.localStorage.getItem('lastMenuSelection') || null;
+			if( lastMenuSelection ) $('a[data-id='+lastMenuSelection+']').click();
+			$('a[data-toggle=collapse]').click(function(){
+				if( lastMenuSelection == $(this).attr('data-id') ) return;
+				if( lastMenuSelection ) $('a[data-id='+lastMenuSelection+']').click();
+				lastMenuSelection = $(this).attr('data-id');
+				window.localStorage.setItem('lastMenuSelection', lastMenuSelection )
+			});	
+
+
+		} );
+	</script>
+
+	
+	<script>
+		$( function () {
+			$('#main').localScroll({
+				offset: { top: 56 } //offset by the height of your header (give or take a few px, see what works for you)
+			});
+			$(".routeTitle").on('click', function(){
+			    $(this).next().slideToggle();
+			});
+			$( "dt h4.name" ).each( function () {
+				var $this = $( this );
+				//var icon = $( "<i/>" ).addClass( "icon-plus-sign" ).addClass( "pull-right" );
+				var dt = $this.parents( "dt" );
+				var children = dt.next( "dd" );
+
+				//$this.append( icon ).css( {cursor : "pointer"} );
+				$this.addClass( "member-collapsed" ).addClass( "member" );
+
+				children.hide();
+				$this.toggle( function () {
+					//icon.addClass( "icon-minus-sign" ).removeClass( "icon-plus-sign" );
+					$this.addClass( "member-open" ).removeClass( "member-collapsed" );
+					children.slideDown();
+				}, function () {
+					//icon.addClass( "icon-plus-sign" ).removeClass( "icon-minus-sign" );
+					$this.addClass( "member-collapsed" ).removeClass( "member-open" );
+					children.slideUp();
+				} );
+			} );
+			$('.sourceBar').click(function(event){event.stopPropagation();})
+		} );
+	</script>
+	
+
+</body>
+</html>
